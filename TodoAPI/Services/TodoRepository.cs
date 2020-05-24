@@ -34,6 +34,11 @@ namespace TodoAPI.Services
             _todoList.Add(item);
         }
 
+        public void InsertRange(IEnumerable<TodoItem> items)
+        {
+            _todoList.AddRange(items);
+        }
+
         public void Update(TodoItem item)
         {
             var todoItem = this.Find(item.ID);

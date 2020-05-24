@@ -9,7 +9,9 @@ namespace TodoAPI.Interfaces
         IEnumerable<TodoItem> All { get; }
         TodoItem Find(string id);
         void Insert(TodoItem item);
+        void InsertRange(IEnumerable<TodoItem> items);
         void Update(TodoItem item);
         void Delete(string id);
+        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TodoAPI.Interfaces;
@@ -16,7 +17,7 @@ namespace TodoAPI.Controllers
         CouldNotDeleteItem
     }
 
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class TodoItemsController : Controller
     {
         private readonly ITodoRepository _todoRepository;
@@ -32,7 +33,7 @@ namespace TodoAPI.Controllers
             return Ok(_todoRepository.All);
         }
 
-        [HttpPost]
+        [HttpPost]            
         public IActionResult Create([FromBody]TodoItem item)
         {
             try
@@ -53,6 +54,29 @@ namespace TodoAPI.Controllers
                 return BadRequest(ErrorCode.CouldNotCreateItem.ToString());
             }
             return Ok(item);
+        }
+
+        [HttpPost]        
+        public IActionResult CreateRange([FromBody]IEnumerable<TodoItem> items)
+        {
+            try
+            {
+                if (items == null || !ModelState.IsValid)
+                {
+                    return BadRequest(ErrorCode.TodoItemNameAndNotesRequired.ToString());
+                }
+                //bool itemExists = _todoRepository.DoesItemExist(item.ID);
+                //if (itemExists)
+                //{
+                //    return StatusCode(StatusCodes.Status409Conflict, ErrorCode.TodoItemIDInUse.ToString());
+                //}
+                _todoRepository.InsertRange(items);
+            }
+            catch (Exception)
+            {
+                return BadRequest(ErrorCode.CouldNotCreateItem.ToString());
+            }
+            return Ok(items);
         }
 
         [HttpPut]
